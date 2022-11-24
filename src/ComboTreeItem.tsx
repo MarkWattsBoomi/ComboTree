@@ -67,6 +67,7 @@ export class ComboTreeItem {
     parent: ComboTreeItem;
     items: Map<string, ComboTreeItem>;
     internalId: string;
+    element: any;
     
 
     constructor() {
@@ -115,6 +116,7 @@ export class ComboTreeItem {
         content=(
             <div
                 style={style}
+                ref={(e: any) => {this.element = e}}
             >
                 <span
                     className="comtree-tree-item"
@@ -133,6 +135,7 @@ export class ComboTreeItem {
     }
 
     selectItem(e: any){
+        e.stopPropagation();
         this.root.selectItem(this);
     }
 

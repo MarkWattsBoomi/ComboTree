@@ -22,6 +22,7 @@ export default class ComboTree extends FlowComponent {
         this.flowMoved = this.flowMoved.bind(this);
         this.buildTree = this.buildTree.bind(this);
         this.toggleShow = this.toggleShow.bind(this);
+        this.blur = this.blur.bind(this);
         this.treeSelectionChanged = this.treeSelectionChanged.bind(this);
         this.state = {expanded: false};
     }
@@ -91,8 +92,30 @@ export default class ComboTree extends FlowComponent {
         await this.updateValues(stateField);
     }
 
-    toggleShow(show: boolean) {
-        this.setState({expanded: show});
+    toggleShow(show?: boolean) {
+        if(show !== undefined) {
+            this.setState({expanded: show});
+        }
+        else {
+            this.setState({expanded: !this.state.expanded});
+        }
+    }
+
+    //
+    blur(e: any) {
+        let el = e.toElement || e.relatedTarget;
+        //check for all children levels (checking from bottom up)
+        //while(el && el.parentNode && el.parentNode != window) {
+        //    if (el.parentNode.id == this.element.id||  el.id == this.element.id) {
+        //        if(el.preventDefault) el.preventDefault();
+        //        return false;
+        //    }
+        //    el = el.parentNode;
+        //}
+        //if(this.root.eventHandler) {
+        //    this.root.eventHandler();
+        //}
+        this.toggleShow(false);
     }
 
     render() {
@@ -135,6 +158,7 @@ export default class ComboTree extends FlowComponent {
             tree=(
                 <div
                     className="comtree-tree"
+                    onMouseLeave={this.blur}
                 >
                     {this.treeItems?.makeComboContent()}
                 </div>
@@ -157,11 +181,12 @@ export default class ComboTree extends FlowComponent {
                 {label}
                 <div
                     className="comtree-combo"
-                    onClick={(e: any) => {this.toggleShow(true)}}
+                    onClick={(e: any) => {this.toggleShow()}}
                 >
                     {value}
+                    {tree}
                 </div>
-                {tree}
+                
             </div>
         );
     }

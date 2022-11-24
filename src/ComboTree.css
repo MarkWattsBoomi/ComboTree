@@ -6,7 +6,8 @@
 }
 
 .comtree-label {
-    
+    width: fit-content;
+    margin-right: 1rem;
 }
 
 .comtree-help {
@@ -49,6 +50,7 @@
     border: 1px solid #ccc;
     position: absolute;
     left:0;
+    top: 100%;
     z-index: 10000;
     border-radius: 0.3rem;
     padding: 1rem;
