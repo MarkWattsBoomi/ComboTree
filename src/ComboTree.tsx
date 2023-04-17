@@ -68,7 +68,7 @@ export default class ComboTree extends FlowComponent {
         this.stateValueName = this.getAttribute("stateValueName");
         let stateField: FlowField = await this.loadValue(this.stateValueName);
         let state: FlowObjectData = stateField.value as FlowObjectData;
-        this.treeItems = ComboTreeItems.parse(this.model.dataSource, this.idPropertyName, this.labelPropertyName, this.parentPropertyName, this.childrenPropertyName, this.treeSelectionChanged, state?.properties[this.idPropertyName]?.value as string);
+        this.treeItems = ComboTreeItems.parse(this.model.dataSource, this.idPropertyName, this.labelPropertyName, this.parentPropertyName, this.childrenPropertyName, this.treeSelectionChanged, state);
         this.forceUpdate();
     }
 
@@ -81,9 +81,9 @@ export default class ComboTree extends FlowComponent {
             if(!state){
                 state=FlowObjectData.newInstance(this.stateValueTypeName);
             }
-            state.addProperty(FlowObjectDataProperty.newInstance(this.idPropertyName,eContentType.ContentString,selectedItem.id));
             state.addProperty(FlowObjectDataProperty.newInstance(this.labelPropertyName,eContentType.ContentString,selectedItem.label));
-            state.addProperty(FlowObjectDataProperty.newInstance(this.parentPropertyName,eContentType.ContentString,selectedItem.parent?.id));
+            state.addProperty(FlowObjectDataProperty.newInstance(this.parentPropertyName,eContentType.ContentString,selectedItem.parentId));
+            state.addProperty(FlowObjectDataProperty.newInstance(this.idPropertyName,eContentType.ContentString,selectedItem.id));
         }
         else {
             state = null;

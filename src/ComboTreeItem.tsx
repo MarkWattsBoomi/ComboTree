@@ -11,7 +11,7 @@ export class ComboTreeItems {
         this.selectItem = this.selectItem.bind(this);
     }
 
-    public static parse(src: FlowObjectDataArray, idProperty: string, labelProperty: string, parentProperty: string, childrenProperty: string, eventHandler: any, selectedItem: string) : ComboTreeItems {
+    public static parse(src: FlowObjectDataArray, idProperty: string, labelProperty: string, parentProperty: string, childrenProperty: string, eventHandler: any, selectedItem: FlowObjectData) : ComboTreeItems {
         let items: ComboTreeItems = new ComboTreeItems();
         items.eventHandler = eventHandler;
         src.items.forEach((item: FlowObjectData) => {
@@ -65,6 +65,7 @@ export class ComboTreeItem {
     label: string;
     root: ComboTreeItems;
     parent: ComboTreeItem;
+    parentId: string;
     items: Map<string, ComboTreeItem>;
     internalId: string;
     element: any;
@@ -75,11 +76,12 @@ export class ComboTreeItem {
         this.selectItem = this.selectItem.bind(this);
     }
 
-    public static parse(root: ComboTreeItems, parent: ComboTreeItem, src: FlowObjectData, idProperty: string, labelProperty: string, parentProperty: string, childrenProperty: string, selectedItem: string) : ComboTreeItem {
+    public static parse(root: ComboTreeItems, parent: ComboTreeItem, src: FlowObjectData, idProperty: string, labelProperty: string, parentProperty: string, childrenProperty: string, selectedItem: FlowObjectData) : ComboTreeItem {
         let cti: ComboTreeItem = new ComboTreeItem();
         cti.id = src.properties[idProperty].value as string;
         cti.label = src.properties[labelProperty].value as string;
         cti.parent = parent;
+        cti.parentId = src.properties[parentProperty]?.value as string || src.properties[idProperty].value as string;
         cti.root = root;
         cti.internalId = src.internalId;
         let children: FlowObjectDataArray = src.properties[childrenProperty]?.value as FlowObjectDataArray;
@@ -89,7 +91,8 @@ export class ComboTreeItem {
                 cti.items.set(ccti.id, ccti);
             });
         }
-        if(cti.id === selectedItem) {
+        let selectedId: string = selectedItem.properties[idProperty].value as string;
+        if(cti.id === selectedId) {
             root.selectItem(cti);
         }
         return cti;
